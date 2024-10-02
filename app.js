@@ -46,33 +46,38 @@ const flowSoporte = addKeyword(["necesito ayuda"]).addAnswer(
 
 const flowVoiceNote = addKeyword(EVENTS.VOICE_NOTE).addAction(
     async (ctx, ctxFn) => {
-        await ctxFn.flowDynamic("Dame un momento para escucharte... 🙉");
-        console.log("🤖 voz a texto....");
-        
-        let text;
+        // Verificar si el mensaje es una nota de voz
+        if (ctx.type === 'audio' && ctx.isVoice) {
+            await ctxFn.flowDynamic("Dame un momento para escucharte... 🙉");
+            console.log("🤖 voz a texto....");
+            
+            let text;
 
-        try {
-            text = await handlerAI(ctx);
-            console.log(`🤖 Fin voz a texto....[TEXT]: ${text}`);
+            try {
+                text = await handlerAI(ctx);
+                console.log(`🤖 Fin voz a texto....[TEXT]: ${text}`);
 
-            const empleado = await employeesAddon.determine(text);
-            if (!empleado) {
-                throw new Error('No se pudo determinar el flujo para el empleado.');
+                const empleado = await employeesAddon.determine(text);
+                if (!empleado) {
+                    throw new Error('No se pudo determinar el flujo para el empleado.');
+                }
+
+                employeesAddon.gotoFlow(empleado, ctxFn);
+            } catch (error) {
+                if (error.code === 'insufficient_quota') {
+                    console.error('Error de cuota: has excedido tu límite. Por favor, verifica tu plan y detalles de facturación.');
+                    await ctxFn.flowDynamic('Lo siento, he alcanzado mi límite de uso. Por favor, inténtalo más tarde.');
+                } else {
+                    console.error('Error al procesar la voz:', error);
+                    await ctxFn.flowDynamic('Ocurrió un error al procesar tu mensaje. Por favor, inténtalo de nuevo.');
+                }
             }
-
-            employeesAddon.gotoFlow(empleado, ctxFn);
-        } catch (error) {
-            if (error.code === 'insufficient_quota') {
-                console.error('Error de cuota: has excedido tu límite. Por favor, verifica tu plan y detalles de facturación.');
-                await ctxFn.flowDynamic('Lo siento, he alcanzado mi límite de uso. Por favor, inténtalo más tarde.');
-            } else {
-                console.error('Error al procesar la voz:', error);
-                await ctxFn.flowDynamic('Ocurrió un error al procesar tu mensaje. Por favor, inténtalo de nuevo.');
-            }
+        } else {
+            // No hacer nada si no es una nota de voz
+            console.log('Este mensaje no es una nota de voz.');
         }
     }
 );
-
 
 const flowDocs = addKeyword(['doc', 'documentacion', 'documentación']).addAnswer(
     [
