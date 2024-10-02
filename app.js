@@ -1,4 +1,4 @@
-const https = require('https');
+const http = require('http');
 require("dotenv").config();
 
 const {
@@ -139,7 +139,7 @@ const main = async () => {
     QRPortalWeb();
 
     // Crear un servidor HTTP para manejar solicitudes POST
-    const server = https.createServer((req, res) => {
+    const server = http.createServer((req, res) => {
         console.log('Solicitud recibida:', req.method, req.url);
         if (req.method === 'POST' && req.url === '/send-message') {
             let body = '';
@@ -184,8 +184,8 @@ const main = async () => {
         }
     });
 
-    server.listen(443, () => {
-        console.log('Servidor HTTPS corriendo en el puerto 443');
+    server.listen(3001, () => {
+        console.log('Servidor HTTP corriendo en el puerto 3001');
     });
 };
 
