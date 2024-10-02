@@ -1,4 +1,4 @@
-const https = require('https');
+const http = require('http');
 require("dotenv").config();
 
 const {
@@ -144,7 +144,7 @@ const main = async () => {
     QRPortalWeb();
 
     // Crear un servidor HTTP para manejar solicitudes POST
-    const server = https.createServer((req, res) => {
+    const server = http.createServer((req, res) => {
         console.log('Solicitud recibida:', req.method, req.url);
         if (req.method === 'POST' && req.url === '/send-message') {
             let body = '';
