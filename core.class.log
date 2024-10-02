@@ -1,0 +1,48 @@
+[handleMsg]:  {
+  key: {
+    remoteJid: '593960055956@s.whatsapp.net',
+    fromMe: false,
+    id: '8B82480DE4A2B92F9777160CA1AA4BD5',
+    participant: undefined
+  },
+  messageTimestamp: 1727857046,
+  pushName: 'Alex',
+  broadcast: false,
+  message: Message {
+    conversation: 'ff_ee',
+    messageContextInfo: MessageContextInfo {
+      deviceListMetadata: [DeviceListMetadata],
+      deviceListMetadataVersion: 2,
+      messageSecret: [Uint8Array]
+    }
+  },
+  verifiedBizName: 'Alex',
+  body: 'ff_ee',
+  from: '593960055956'
+}
+[handleMsg]:  {
+  key: {
+    remoteJid: '593960055956@s.whatsapp.net',
+    fromMe: false,
+    id: '3EB0F5AEDD4069C427B569',
+    participant: undefined
+  },
+  messageTimestamp: 1727857053,
+  pushName: 'Alex',
+  broadcast: false,
+  message: Message {
+    protocolMessage: ProtocolMessage {
+      type: 4,
+      ephemeralExpiration: 0,
+      ephemeralSettingTimestamp: [Long],
+      disappearingMode: [DisappearingMode]
+    },
+    messageContextInfo: MessageContextInfo {
+      deviceListMetadata: [DeviceListMetadata],
+      deviceListMetadataVersion: 2
+    }
+  },
+  verifiedBizName: 'Alex',
+  body: '',
+  from: '593960055956'
+}
