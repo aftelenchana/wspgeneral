@@ -88,7 +88,14 @@ const flowDocs = addKeyword(['doc', 'documentacion', 'documentación']).addAnswe
 
 
 
+const interceptor = (ctx) => {
+    const message = ctx.body; // Obtiene el mensaje recibido
 
+    // Imprime el mensaje en la consola
+    console.log(`Mensaje recibido: ${message}`);
+    
+    // Puedes agregar lógica adicional aquí si necesitas manejar palabras clave
+};
 
 
 const flowPrincipal = addKeyword(['Consulta de 1103482996001'])
@@ -96,6 +103,8 @@ const flowPrincipal = addKeyword(['Consulta de 1103482996001'])
     .addAnswer(
         async (ctx) => {
             try {
+
+                interceptor(ctx);
                 // Capturamos el mensaje que llega
                 const mensaje = ctx.body;
 
