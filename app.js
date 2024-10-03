@@ -118,6 +118,47 @@ const flowPrincipal = addKeyword(['ff_ee', 'yy_rr', 'hh_ll'])
         },
         [flowDocs, flowVentas, flowSoporte, flowVoiceNote] // Integrando flowVoiceNote aquí
     );
+
+
+    const flowPrincipal2 = addKeyword(['Consulta de 1103482996001'])
+    .addAnswer('🙌 Hola, bienvenido a este *Chatbot*')
+    .addAnswer(
+        async (ctx) => {
+            // Capturamos el mensaje que llega
+            const mensaje = ctx.body;
+
+            // Utilizamos una expresión regular para extraer el número de la cédula
+            const regex = /Consulta de (\d{13})/;
+            const match = mensaje.match(regex);
+
+            if (match && match[1]) {
+                const cedula = match[1]; // Aquí tenemos la cédula
+
+                // JSON a enviar a la API
+                const jsonData = {
+                    "identificacion": cedula
+                };
+
+                // Llamamos a tu API local utilizando el método que ya tienes implementado
+                const respuestaAPI = await fetch('http://localhost/dev/wspguibis/', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(jsonData)
+                });
+
+                // Extraemos el cuerpo de la respuesta
+                const datos = await respuestaAPI.json();
+
+                // Responde con el resultado de la API
+                return `La respuesta de la API para la identificación ${cedula} es: ${JSON.stringify(datos)}`;
+            } else {
+                return 'No se encontró una identificación válida en el mensaje.';
+            }
+        },
+        [flowDocs, flowVentas, flowSoporte, flowVoiceNote] // Flujos adicionales si es necesario
+    );
    
 
 
@@ -126,6 +167,7 @@ const main = async () => {
     const adapterDB = new MockAdapter();
     const adapterFlow = createFlow([
         flowPrincipal,
+        flowPrincipal2,
         flowVentas,
         flowSoporte,
         flowVoiceNote,
