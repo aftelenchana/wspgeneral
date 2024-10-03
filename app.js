@@ -83,7 +83,14 @@ const flowDocs = addKeyword(['doc', 'documentacion', 'documentación']).addAnswe
     [
         '📄 Aquí encontrarás la documentación, recuerda que puedes mejorarla.',
         'https://bot-whatsapp.netlify.app/',
-    ]
+    ],
+    async (ctx) => {
+        // Aquí puedes capturar el mensaje y mostrarlo en la consola
+        console.log(`Mensaje recibido en flujo principal: ${ctx.body}`);
+        
+        // Llama al interceptor aquí
+        interceptor(ctx);
+    }
 );
 
 
