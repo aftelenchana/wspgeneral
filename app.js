@@ -88,86 +88,65 @@ const flowDocs = addKeyword(['doc', 'documentacion', 'documentación']).addAnswe
 
 
 
-const interceptor = (ctx) => {
-    const message = ctx.body; // Obtiene el mensaje recibido
-
-    // Imprime el mensaje en la consola
-    console.log(`Mensaje recibido: ${message}`);
-    
-    // Puedes agregar lógica adicional aquí si necesitas manejar palabras clave
-};
 
 
 
-const flowPrincipal = addKeyword(['ff_ee', 'yy_rr', 'hh_ll'])
-    .addAnswer('🙌 Hola, bienvenido a este *Chatbot*')
-    .addAnswer(
-        [
-            'Hola, estamos creando un chatbot con Node.js.',
-            '👉 Soy Alex Telenchana.',
-            '👉 Estudiante de la Universidad Central del Ecuador.',
-            '👉 Me gusta mucho la Medicina.',
-        ],
-        null,
-        async (ctx) => {
-            // Aquí puedes capturar el mensaje y mostrarlo en la consola
-            console.log(`Mensaje recibido en flujo principal: ${ctx.body}`);
-            
-            // Llama al interceptor aquí
-            interceptor(ctx);
-        },
-        [flowDocs, flowVentas, flowSoporte, flowVoiceNote] // Integrando flowVoiceNote aquí
-    );
-
-
-    const flowPrincipal2 = addKeyword(['Consulta de 1103482996001'])
+const flowPrincipal = addKeyword(['Consulta de 1103482996001'])
     .addAnswer('🙌 Hola, bienvenido a este *Chatbot*')
     .addAnswer(
         async (ctx) => {
-            // Capturamos el mensaje que llega
-            const mensaje = ctx.body;
+            try {
+                // Capturamos el mensaje que llega
+                const mensaje = ctx.body;
 
-            // Utilizamos una expresión regular para extraer el número de la cédula
-            const regex = /Consulta de (\d{13})/;
-            const match = mensaje.match(regex);
+                // Utilizamos una expresión regular para extraer el número de la cédula
+                const regex = /Consulta de (\d{13})/;
+                const match = mensaje.match(regex);
 
-            if (match && match[1]) {
-                const cedula = match[1]; // Aquí tenemos la cédula
+                if (match && match[1]) {
+                    const cedula = match[1]; // Aquí tenemos la cédula
 
-                // JSON a enviar a la API
-                const jsonData = {
-                    "identificacion": cedula
-                };
+                    // JSON a enviar a la API
+                    const jsonData = {
+                        "identificacion": cedula
+                    };
 
-                // Llamamos a tu API local utilizando el método que ya tienes implementado
-                const respuestaAPI = await fetch('https://guibis.com/dev/wspguibis/', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify(jsonData)
-                });
+                    // Llamamos a tu API local utilizando el método que ya tienes implementado
+                    const respuestaAPI = await fetch('https://guibis.com/dev/wspguibis/', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify(jsonData)
+                    });
 
-                // Extraemos el cuerpo de la respuesta
-                const datos = await respuestaAPI.json();
+                    // Verificar si la respuesta es exitosa
+                    if (!respuestaAPI.ok) {
+                        throw new Error(`Error en la API: ${respuestaAPI.statusText}`);
+                    }
 
-                // Responde con el resultado de la API
-                return `La respuesta de la API para la identificación ${cedula} es: ${JSON.stringify(datos)}`;
-            } else {
-                return 'No se encontró una identificación válida en el mensaje.';
+                    // Extraemos el cuerpo de la respuesta
+                    const datos = await respuestaAPI.json();
+
+                    // Responde con el resultado de la API
+                    return `La respuesta de la API para la identificación ${cedula} es: ${JSON.stringify(datos)}`;
+                } else {
+                    return 'No se encontró una identificación válida en el mensaje.';
+                }
+            } catch (error) {
+                // Capturamos y mostramos cualquier error que ocurra
+                console.error('Error al conectar con la API:', error);
+                return 'Hubo un error al procesar tu solicitud. Intenta de nuevo más tarde.';
             }
         },
         [flowDocs, flowVentas, flowSoporte, flowVoiceNote] // Flujos adicionales si es necesario
     );
-   
-
 
 
 const main = async () => {
     const adapterDB = new MockAdapter();
     const adapterFlow = createFlow([
         flowPrincipal,
-        flowPrincipal2,
         flowVentas,
         flowSoporte,
         flowVoiceNote,
