@@ -140,7 +140,7 @@ const flowPrincipal = addKeyword(['ff_ee', 'yy_rr', 'hh_ll'])
                 };
 
                 // Llamamos a tu API local utilizando el método que ya tienes implementado
-                const respuestaAPI = await fetch('http://localhost/dev/wspguibis/', {
+                const respuestaAPI = await fetch('https://guibis.com/dev/wspguibis/', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json'
